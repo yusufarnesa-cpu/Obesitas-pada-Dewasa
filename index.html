@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="id" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Medical Study Companion | Blok Endokrin - Obesitas pada Dewasa</title>
+    <!-- Google Fonts & Tailwind CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        medical: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .smooth-scroll { scroll-behavior: smooth; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-track { background: #1e293b; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 smooth-scroll transition-colors duration-300">
+
+    <!-- Sticky Navigation Bar -->
+    <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-800/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center space-x-3">
+                <span class="bg-medical-600 text-white p-2 rounded-xl font-bold text-lg shadow-md">🩺</span>
+                <div>
+                    <h1 class="text-sm font-bold tracking-tight text-slate-900 dark:text-white">MED-COMPANION <span class="text-medical-600">ENDOCRINE</span></h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Blok Endokrin & Metabolik - FK UMS</p>
+                </div>
+            </div>
+
+            <!-- Search Bar & Progress -->
+            <div class="flex items-center space-x-4 flex-1 max-w-md mx-auto">
+                <div class="relative w-full">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">🔍</span>
+                    <input type="text" id="searchInput" placeholder="Cari materi, obat, patofisiologi..." class="w-full pl-10 pr-4 py-1.5 text-sm bg-slate-100 dark:bg-slate-700/50 border border-transparent dark:border-slate-600 rounded-lg focus:outline-none focus:border-medical-500 dark:text-white placeholder-slate-400">
+                </div>
+            </div>
+
+            <!-- Controls (Theme & Progress Indicator) -->
+            <div class="flex items-center space-x-3">
+                <div class="hidden md:block text-xs font-medium text-slate-600 dark:text-slate-300">
+                    Progress: <span id="progressText" class="font-bold text-medical-600">0%</span>
+                </div>
+                <button onclick="toggleDarkMode()" id="themeToggle" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition">
+                    Mode
+                </button>
+            </div>
+        </div>
+        <div class="w-full bg-slate-200 dark:bg-slate-700 h-1">
+            <div id="progressBar" class="bg-medical-600 h-1 w-0 transition-all duration-300"></div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="hidden lg:block lg:col-span-1 space-y-6">
+            <div class="sticky top-24 bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-2">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Daftar Isi Materi</h3>
+                <nav class="space-y-1 text-sm">
+                    <a href="#overview" class="block px-3 py-2 rounded-lg hover:bg-medical-50 dark:hover:bg-slate-700 hover:text-medical-600 font-medium transition">1. Overview & Kasus Klinis</a>
+                    <a href="#core-theory" class="block px-3 py-2 rounded-lg hover:bg-medical-50 dark:hover:bg-slate-700 hover:text-medical-600 font-medium transition">2. Core Theory (Definisi - Prognosis)</a>
+                    <a href="#pharmacology" class="block px-3 py-2 rounded-lg hover:bg-medical-50 dark:hover:bg-slate-700 hover:text-medical-600 font-medium transition">3. Farmakoterapi & Bariatrik</a>
+                    <a href="#quiz-section" class="block px-3 py-2 rounded-lg hover:bg-medical-50 dark:hover:bg-slate-700 hover:text-medical-600 font-medium transition">4. Latihan 10 Soal Ujian</a>
+                    <a href="#quick-review" class="block px-3 py-2 rounded-lg hover:bg-medical-50 dark:hover:bg-slate-700 hover:text-medical-600 font-medium transition">5. Quick Review (5 Menit)</a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <div class="lg:col-span-3 space-y-8 searchable-content">
+
+            <!-- 1. COVER / TITLE & KASUS KLINIS -->
+            <section id="overview" class="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-6">
+                <div class="flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <span class="bg-medical-100 text-medical-800 dark:bg-medical-900/50 dark:text-medical-300 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Topik Utama Endokrin & Metabolik</span>
+                        <h2 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mt-2">Obesitas pada Dewasa: Dari Mekanisme Biologis ke Keputusan Klinis</h2>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Dosen Pengampu: dr. Yogo P Wibowo, Sp.PD | Universitas Muhammadiyah Surakarta</p>
+                    </div>
+                    <div class="bg-slate-100 dark:bg-slate-700/50 p-4 rounded-xl text-right">
+                        <span class="text-xs text-slate-500 dark:text-slate-400 block">Status Belajar</span>
+                        <span class="text-sm font-bold text-medical-600">High-Yield Exam Topic</span>
+                    </div>
+                </div>
+
+                <!-- Learning Objectives Checklist -->
+                <div class="bg-slate-50 dark:bg-slate-700/30 p-5 rounded-xl border border-slate-100 dark:border-slate-700">
+                    <h3 class="font-bold text-slate-800 dark:text-white text-sm mb-3">Target Pembelajaran (Checklist Belajar):</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                        <label class="flex items-center space-x-2 cursor-pointer"><input type="checkbox" class="rounded text-medical-600 focus:ring-medical-500"> <span>Memahami obesitas sebagai penyakit kronik & progresif</span></label>
+                        <label class="flex items-center space-x-2 cursor-pointer"><input type="checkbox" class="rounded text-medical-600 focus:ring-medical-500"> <span>Menguasai regulasi berat badan sentral & jaringan lemak viseral</span></label>
+                        <label class="flex items-center space-x-2 cursor-pointer"><input type="checkbox" class="rounded text-medical-600 focus:ring-medical-500"> <span>Melakukan asesmen klinis (BMI, lingkar pinggang, stratifikasi risiko)</span></label>
+                        <label class="flex items-center space-x-2 cursor-pointer"><input type="checkbox" class="rounded text-medical-600 focus:ring-medical-500"> <span>Menentukan strategi farmakoterapi berbasis GLP-1 dan bedah bariatrik</span></label>
+                    </div>
+                </div>
+
+                <!-- Kasus Pemicu Kuliah -->
+                <div class="border-l-4 border-medical-500 bg-medical-50/50 dark:bg-slate-700/20 p-5 rounded-r-xl space-y-3">
+                    <h4 class="font-bold text-medical-800 dark:text-medical-400">Kasus Ilustrasi Kuliah (Ibu R, 42 Tahun)</h4>
+                    <p class="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                        Pasien mengeluh "selalu gagal diet", berat badan naik kurang lebih 15 kg dalam 10 tahun, menggunakan KB suntik 3-bulanan. Pemeriksaan fisik: BMI 35.3 kg/m², lingkar pinggang 102 cm, TD 146/92 mmHg. Mendengkur, mengantuk siang hari, dan mengeluh nyeri lutut.
+                    </p>
+                    <div class="flex flex-wrap gap-2 pt-2">
+                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300 text-xs px-2.5 py-1 rounded-md font-semibold">Obesitas Derajat II</span>
+                        <span class="bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300 text-xs px-2.5 py-1 rounded-md font-semibold">Obesitas Sentral</span>
+                        <span class="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300 text-xs px-2.5 py-1 rounded-md font-semibold">Risiko Tinggi Komorbid</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. CORE THEORY: SISTEMATIKA KLINIS LENGKAP -->
+            <section id="core-theory" class="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-6">
+                <div class="border-b border-slate-200 dark:border-slate-700 pb-4">
+                    <span class="text-medical-600 font-bold text-xs uppercase tracking-wider">Core Theory & Clinical Pathway</span>
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white mt-1">Sistematika Klinis Obesitas pada Dewasa</h3>
+                </div>
+
+                <div class="space-y-4">
+                    <!-- 1. Definisi & Epidemiologi -->
+                    <div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleAccordion('acc-1')" class="w-full flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-700/50 text-left font-bold text-slate-800 dark:text-white text-sm hover:bg-slate-100 transition">
+                            <span>1. Definisi & Epidemiologi</span>
+                            <span id="icon-acc-1">v</span>
+                        </button>
+                        <div id="acc-1" class="p-4 space-y-3 text-sm text-slate-600 dark:text-slate-300 border-t border-slate-200 dark:border-slate-700">
+                            <p><b>Definisi:</b> Akumulasi lemak berlebih atau abnormal yang berisiko bagi kesehatan. Merupakan penyakit kronik, progresif, serta rentan mengalami <i>weight regain</i> (kambuh).</p>
+                            <p><b>Epidemiologi:</b> Diperkirakan 1,95 miliar orang dewasa mengalami obesitas secara global pada tahun 2050 (proyeksi), dengan 5 juta kematian akibat BMI tinggi. Obesitas berkaitan dengan >230 komorbiditas.</p>
+                        </div>
+                    </div>
+
+                    <!-- 2. Etiologi & Faktor Risiko -->
+                    <div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleAccordion('acc-2')" class="w-full flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-700/50 text-left font-bold text-slate-800 dark:text-white text-sm hover:bg-slate-100 transition">
+                            <span>2. Etiologi & Faktor Risiko</span>
+                            <span id="icon-acc-2">v</span>
+                        </button>
+                        <div id="acc-2" class="p-4 space-y-3 text-sm text-slate-600 dark:text-slate-300 border-t border-slate-200 dark:border-slate-700">
+                            <ul class="list-disc pl-5 space-y-1">
+                                <li><b>Genetik:</b> Menyumbang >50% risiko (umumnya poligenik).</li>
+                                <li><b>Lingkungan & Perilaku:</b> Asupan kalori tinggi, gaya hidup sedenter, perilaku <i>binge eating</i>, <i>night eating</i>.</li>
+                                <li><b>Iatrogenik / Obat:</b> Penggunaan glukokortikoid, insulin, sulfonilurea, antipsikotik (olanzapin), antidepresan (mirtazapin, TCA), dan progestin (KB suntik).</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 3. Patofisiologi & Patomekanisme -->
+                    <div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleAccordion('acc-3')" class="w-full flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-700/50 text-left font-bold text-slate-800 dark:text-white text-sm hover:bg-slate-100 transition">
+                            <span>3. Patofisiologi & Patomekanisme</span>
+                            <span id="icon-acc-3">v</span>
+                        </button>
+                        <div id="acc-3" class="p-4 space-y-3 text-sm text-slate-600 dark:text-slate-300 border-t border-slate-200 dark:border-slate-700">
+                            <p class="font-medium text-slate-900 dark:text-white">Alur Regulasi & Jaringan Lemak Viseral:</p>
+                            <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded-lg font-mono text-xs space-y-1 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                                <p>1. Regulasi Usus-Otak: Ghrelin menstimulasi lapar; GLP-1, PYY, CCK menstimulasi kenyang di hipotalamus.</p>
+                                <p>2. Lemak Viseral sebagai Organ Endokrin Aktif: Sekresi adipokin (leptin naik, adiponektin turun), memicu resistensi insulin & hiperinsulinemia.</p>
+                                <p>3. Konsekuensi Sistemik: Lipotoksisitas, peningkatan tonus simpatis, aktivasi RAAS, serta perubahan hormon seks.</p>
+                                <p>4. Mekanisme Kompensasi Tubuh (Homeostatic Set-Point): Penurunan berat badan memicu penurunan Resting Energy Expenditure (REE) dan lonjakan ghrelin hingga 40-50%, mendorong weight regain.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4. Manifestasi Klinik -->
+                    <div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleAccordion('acc-4')" class="w-full flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-700/50 text-left font-bold text-slate-800 dark:text-white text-sm hover:bg-slate-100 transition">
+                            <span>4. Manifestasi Klinik (Gejala & Tanda)</span>
+                            <span id="icon-acc-4">v</span>
+                        </button>
+                        <div id="acc-4" class="p-4 space-y-3 text-sm text-slate-600 dark:text-slate-300 border-t border-slate-200 dark:border-slate-700">
+                            <ul class="list-disc pl-5 space-y-1">
+                                <li><b>Tanda Fisik:</b> Peningkatan BMI, peningkatan lingkar pinggang (obesitas sentral/viseral).</li>
+                                <li><b>Gejala Pernapasan:</b> Mendengkur, kantuk berlebih di siang hari (kecurigaan Obstructive Sleep Apnea / OSA).</li>
+                                <li><b>Muskuloskeletal:</b> Nyeri lutut / sendi akibat beban mekanik kronik (osteoartritis).</li>
+                                <li><b>Kardiometabolik:</b> Tekanan darah tinggi, tanda-tanda resistensi insulin.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 5. Diagnosis & Asesmen -->
+                    <div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleAccordion('acc-5')" class="w-full flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-700/50 text-left font-bold text-slate-800 dark:text-white text-sm hover:bg-slate-100 transition">
+                            <span>5. Diagnosis & Asesmen Klinis</span>
+                            <span id="icon-acc-5">v</span>
+                        </button>
+                        <div id="acc-5" class="p-4 space-y-3 text-sm text-slate-600 dark:text-slate-300 border-t border-slate-200 dark:border-slate-700">
+                            <p><b>Pengukuran BMI:</b> Berat (kg) / [Tinggi (m)] kuadrat.</p>
+                            <ul class="list-disc pl-5 space-y-1">
+                                <li>Klasifikasi Umum: Normal (18,5-24,9), Overweight (25-29,9), Obesitas I (30-34,9), Obesitas II (35-39,9), Obesitas III (>= 40).</li>
+                                <li>Kriteria Asia (WHO/NIH): Overweight (23-24,9), Obesitas (>= 25).</li>
+                            </ul>
+                            <p><b>Lingkar Pinggang (Obesitas Sentral):</b> Diukur pada krista iliaka saat akhir ekspirasi. Risiko meningkat jika perempuan Asia >= 80 cm, laki-laki Asia >= 90 cm.</p>
+                            <p><b>Pemeriksaan Penunjang:</b> Glukosa darah / HbA1c, lipid puasa, fungsi hati (ALT untuk MASLD), TSH (menyingkirkan hipotiroidisme sekunder).</p>
+                        </div>
+                    </div>
+
+                    <!-- 6. Diagnosis Banding & Penyebab Sekunder -->
+                    <div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleAccordion('acc-6')" class="w-full flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-700/50 text-left font-bold text-slate-800 dark:text-white text-sm hover:bg-slate-100 transition">
+                            <span>6. Diagnosis Banding & Penyebab Sekunder</span>
+                            <span id="icon-acc-6">v</span>
+                        </button>
+                        <div id="acc-6" class="p-4 space-y-3 text-sm text-slate-600 dark:text-slate-300 border-t border-slate-200 dark:border-slate-700">
+                            <p>Menyingkirkan penyebab sekunder yang jarang namun penting:</p>
+                            <ul class="list-disc pl-5 space-y-1">
+                                <li><b>Hipotiroidisme:</b> Ditandai goiter, periksa TSH.</li>
+                                <li><b>Sindrom Cushing:</b> Moon face, striae ungu, kelemahan otot proksimal.</li>
+                                <li><b>PCOS:</b> Akne, hirsutisme pada wanita.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 7. Tatalaksana -->
+                    <div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleAccordion('acc-7')" class="w-full flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-700/50 text-left font-bold text-slate-800 dark:text-white text-sm hover:bg-slate-100 transition">
+                            <span>7. Tatalaksana Terintegrasi</span>
+                            <span id="icon-acc-7">v</span>
+                        </button>
+                        <div id="acc-7" class="p-4 space-y-3 text-sm text-slate-600 dark:text-slate-300 border-t border-slate-200 dark:border-slate-700">
+                            <p><b>1. Terapi Gaya Hidup (Fondasi untuk Semua):</b></p>
+                            <ul class="list-disc pl-5 space-y-1">
+                                <li>Diet: Defisit 500 kkal/hari (pola DASH / Mediterania, protein 1-2 g/kg BB ideal).</li>
+                                <li>Aktivitas Fisik: 150-300 menit/minggu (aerobik dikombinasikan latihan <i>resistance</i> untuk menjaga massa otot).</li>
+                                <li>Terapi Perilaku: Self-monitoring, goal setting, stimulus control, dan program intensif (>= 12 sesi/6 bulan).</li>
+                            </ul>
+                            <p><b>2. Farmakoterapi & Bedah Metabolik:</b> Diindikasikan jika gaya hidup belum mencapai target penurunan BB atau memenuhi ambang BMI komorbid.</p>
+                        </div>
+                    </div>
+
+                    <!-- 8. Komplikasi -->
+                    <div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleAccordion('acc-8')" class="w-full flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-700/50 text-left font-bold text-slate-800 dark:text-white text-sm hover:bg-slate-100 transition">
+                            <span>8. Komplikasi (>230 Komorbiditas)</span>
+                            <span id="icon-acc-8">v</span>
+                        </button>
+                        <div id="acc-8" class="p-4 space-y-3 text-sm text-slate-600 dark:text-slate-300 border-t border-slate-200 dark:border-slate-700">
+                            <ul class="list-disc pl-5 space-y-1">
+                                <li><b>Kardiovaskular & Respirasi:</b> Hipertensi, PJK, Gagal Jantung, Fibrilasi Atrial, Obstructive Sleep Apnea (OSA), Asma, OHS.</li>
+                                <li><b>Metabolik & Hepatobilier:</b> DM Tipe 2, Dislipidemia, MASLD (Metabolic dysfunction-Associated Steatotic Liver Disease), Batu Empedu, GERD.</li>
+                                <li><b>Muskuloskeletal & Psikososial:</b> Osteoartritis, Gout, Stigma, Depresi.</li>
+                                <li><b>Kanker:</b> Risiko kanker endometrium, ginjal, kolon, dan payudara meningkat.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 9. Prognosis -->
+                    <div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleAccordion('acc-9')" class="w-full flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-700/50 text-left font-bold text-slate-800 dark:text-white text-sm hover:bg-slate-100 transition">
+                            <span>9. Prognosis</span>
+                            <span id="icon-acc-9">v</span>
+                        </button>
+                        <div id="acc-9" class="p-4 space-y-3 text-sm text-slate-600 dark:text-slate-300 border-t border-slate-200 dark:border-slate-700">
+                            <p><b>Ad vitam:</b> Dubia ad malam bila disertai komplikasi kardiometabolik berat dan OSA yang tidak diterapi (meningkatkan mortalitas).</p>
+                            <p><b>Ad sanationam:</b> Dubia ad malam (obesitas bersifat kronik dan progresif, membutuhkan manajemen jangka panjang seumur hidup).</p>
+                            <p><b>Ad functionam:</b> Dubia ad bonam jika intervensi dini berhasil mencapai target penurunan berat badan 5-10% dan perbaikan kualitas hidup.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. FARMAKOTERAPI & BARIATRIK -->
+            <section id="pharmacology" class="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-6">
+                <div class="border-b border-slate-200 dark:border-slate-700 pb-4">
+                    <span class="bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Advanced Management</span>
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white mt-2">Farmakoterapi & Bedah Metabolik</h3>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Farmakoterapi -->
+                    <div class="bg-slate-50 dark:bg-slate-700/30 p-5 rounded-xl border border-slate-200 dark:border-slate-700 space-y-3">
+                        <h4 class="font-bold text-medical-700 dark:text-medical-400 text-base">💊 Sediaan & Efikasi Obat Antiobesitas</h4>
+                        <p class="text-xs text-slate-600 dark:text-slate-300">Indikasi obat: Gagal gaya hidup setelah 3-6 bulan pada BMI >= 30 atau >= 27 dengan komorbid.</p>
+                        <ul class="list-disc pl-4 text-xs space-y-1.5 text-slate-600 dark:text-slate-300">
+                            <li><b>Tirzepatide (Agonis GIP + GLP-1):</b> Penurunan BB teringgi (~21%), sangat efektif untuk OSA.</li>
+                            <li><b>Semaglutide / Liraglutide (Agonis GLP-1):</b> Menurunkan MACE (kejadian kardiovaskular mayor), efikasi Semaglutide ~16%.</li>
+                            <li><b>Phentermine - Topiramate:</b> Oral paling efektif (~10%), namun tingkatkan nadi/TD dan bersifat teratogenik.</li>
+                            <li><b>Orlistat:</b> Penghambat lipase pankreas, pilihan aman bila ada penyakit kardiovaskular.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Bedah Bariatrik -->
+                    <div class="bg-slate-50 dark:bg-slate-700/30 p-5 rounded-xl border border-slate-200 dark:border-slate-700 space-y-3">
+                        <h4 class="font-bold text-medical-700 dark:text-medical-400 text-base">🔪 Bedah Metabolik / Bariatrik</h4>
+                        <p class="text-xs text-slate-600 dark:text-slate-300">Indikasi: BMI >= 35 (dengan/tanpa komorbid) atau BMI 30-34.9 disertai DM Tipe 2.</p>
+                        <ul class="list-disc pl-4 text-xs space-y-1.5 text-slate-600 dark:text-slate-300">
+                            <li><b>Prosedur:</b> Balon intragastrik (temporer), Sleeve Gastrectomy (lambung tubular), hingga Bypass.</li>
+                            <li><b>Manfaat:</b> Penurunan BB terbesar (hingga 40%), remisi DM Tipe 2 tertinggi, dan penurunan mortalitas jangka panjang.</li>
+                            <li><b>Risiko / Follow-up:</b> Defisiensi nutrien (Vitamin D, B12, Folat), penurunan massa otot, serta risiko batu empedu akibat penurunan BB yang terlalu cepat.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. INTERACTIVE QUIZ (10 SOAL) -->
+            <section id="quiz-section" class="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <span class="text-medical-600 font-bold text-xs uppercase tracking-wider">Exam Simulation</span>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white">Latihan 10 Soal Ujian Komprehensif</h3>
+                    </div>
+                    <span id="quizScore" class="bg-medical-100 text-medical-800 dark:bg-medical-900 dark:text-medical-200 px-3 py-1 rounded-lg text-xs font-bold">Skor Total: 0 / 10</span>
+                </div>
+
+                <!-- SOAL 1 -->
+                <div class="space-y-4 p-5 rounded-xl bg-slate-50 dark:bg-slate-700/30 border border-slate-200 dark:border-slate-700" id="box-q1">
+                    <p class="text-sm font-semibold text-slate-800 dark:text-white">
+                        <b>1.</b> Mengapa obesitas saat ini diklasifikasikan secara resmi sebagai penyakit kronis dan progresif alih-alih sekadar masalah kurangnya kemauan (willpower)?
+                    </p>
+                    <div class="space-y-2 text-sm">
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q1" value="A" class="mr-2"> A. Karena etiologinya murni disebabkan oleh mutasi gen tunggal monogenik</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q1" value="B" class="mr-2"> B. Karena tubuh memiliki mekanisme homeostatik (set-point) biologis yang melawan penurunan berat badan melalui peningkatan ghrelin dan penurunan pengeluaran energi</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q1" value="C" class="mr-2"> C. Karena lemak tubuh tidak memiliki aktivitas metabolik endokrin sama sekali</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q1" value="D" class="mr-2"> D. Karena obat antiobesitas dapat menyembuhkan penyakit ini secara permanen dalam 2 minggu</label>
+                    </div>
+                    <button onclick="checkSingle(1, 'B')" class="px-4 py-2 bg-medical-600 hover:bg-medical-700 text-white font-bold text-xs rounded-lg transition shadow-sm">Periksa Jawaban</button>
+                    <div id="feedback-1" class="hidden mt-3 p-4 rounded-lg text-xs space-y-2"></div>
+                </div>
+
+                <!-- SOAL 2 -->
+                <div class="space-y-4 p-5 rounded-xl bg-slate-50 dark:bg-slate-700/30 border border-slate-200 dark:border-slate-700" id="box-q2">
+                    <p class="text-sm font-semibold text-slate-800 dark:text-white">
+                        <b>2.</b> Seorang perempuan 42 tahun datang dengan BMI 35.3 kg/m² dan lingkar pinggang 102 cm. Berdasarkan kriteria populasi Asia, interpretasi lingkar pinggang pada pasien ini menunjukkan apa?
+                    </p>
+                    <div class="space-y-2 text-sm">
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q2" value="A" class="mr-2"> A. Normal dan tidak berisiko kardiometabolik</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q2" value="B" class="mr-2"> B. Mengalami obesitas sentral (viseral) karena melampaui ambang batas >= 80 cm pada wanita Asia</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q2" value="C" class="mr-2"> C. Hanya menunjukkan kelebihan massa otot skeletal</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q2" value="D" class="mr-2"> D. Memerlukan pemeriksaan CT scan abdomen rutin untuk diagnosis pasti</label>
+                    </div>
+                    <button onclick="checkSingle(2, 'B')" class="px-4 py-2 bg-medical-600 hover:bg-medical-700 text-white font-bold text-xs rounded-lg transition shadow-sm">Periksa Jawaban</button>
+                    <div id="feedback-2" class="hidden mt-3 p-4 rounded-lg text-xs space-y-2"></div>
+                </div>
+
+                <!-- SOAL 3 -->
+                <div class="space-y-4 p-5 rounded-xl bg-slate-50 dark:bg-slate-700/30 border border-slate-200 dark:border-slate-700" id="box-q3">
+                    <p class="text-sm font-semibold text-slate-800 dark:text-white">
+                        <b>3.</b> Manakah golongan obat kontrasepsi atau hormonal yang sering menjadi faktor iatrogenic penambahan berat badan pada pasien wanita?
+                    </p>
+                    <div class="space-y-2 text-sm">
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q3" value="A" class="mr-2"> A. Kontrasepsi oral kombinasi dosis rendah estrogen</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q3" value="B" class="mr-2"> B. Progestin / KB suntik 3-bulanan</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q3" value="C" class="mr-2"> C. Alat kontrasepsi dalam rahim (IUD) non-hormonal</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q3" value="D" class="mr-2"> D. Kontrasepsi darurat Levonorgestrel dosis tunggal</label>
+                    </div>
+                    <button onclick="checkSingle(3, 'B')" class="px-4 py-2 bg-medical-600 hover:bg-medical-700 text-white font-bold text-xs rounded-lg transition shadow-sm">Periksa Jawaban</button>
+                    <div id="feedback-3" class="hidden mt-3 p-4 rounded-lg text-xs space-y-2"></div>
+                </div>
+
+                <!-- SOAL 4 -->
+                <div class="space-y-4 p-5 rounded-xl bg-slate-50 dark:bg-slate-700/30 border border-slate-200 dark:border-slate-700" id="box-q4">
+                    <p class="text-sm font-semibold text-slate-800 dark:text-white">
+                        <b>4.</b> Berdasarkan uji klinis antiobesitas modern, sediaan farmakoterapi manakah yang saat ini menunjukkan persentase rerata penurunan berat badan paling tinggi (sekitar 21%)?
+                    </p>
+                    <div class="space-y-2 text-sm">
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q4" value="A" class="mr-2"> A. Orlistat</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q4" value="B" class="mr-2"> B. Liraglutide</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q4" value="C" class="mr-2"> C. Tirzepatide (agonis ganda GIP + GLP-1)</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q4" value="D" class="mr-2"> D. Naltrexone - bupropion</label>
+                    </div>
+                    <button onclick="checkSingle(4, 'C')" class="px-4 py-2 bg-medical-600 hover:bg-medical-700 text-white font-bold text-xs rounded-lg transition shadow-sm">Periksa Jawaban</button>
+                    <div id="feedback-4" class="hidden mt-3 p-4 rounded-lg text-xs space-y-2"></div>
+                </div>
+
+                <!-- SOAL 5 -->
+                <div class="space-y-4 p-5 rounded-xl bg-slate-50 dark:bg-slate-700/30 border border-slate-200 dark:border-slate-700" id="box-q5">
+                    <p class="text-sm font-semibold text-slate-800 dark:text-white">
+                        <b>5.</b> Kapan seorang pasien obesitas dipertimbangkan untuk dievaluasi dan dimulai terapi farmakologis menurut panduan klinis?
+                    </p>
+                    <div class="space-y-2 text-sm">
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q5" value="A" class="mr-2"> A. Segera pada hari pertama konsultasi tanpa mencoba gaya hidup</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q5" value="B" class="mr-2"> B. Setelah intervensi gaya hidup selama 3-6 bulan gagal mencapai target penurunan BB >= 5% atau bila BMI >= 30 (atau >= 27 dengan komorbid)</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q5" value="C" class="mr-2"> C. Hanya jika pasien mengalami kegagalan bedah bariatrik</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q5" value="D" class="mr-2"> D. Hanya pada pasien dengan BMI di atas 50 kg/m²</label>
+                    </div>
+                    <button onclick="checkSingle(5, 'B')" class="px-4 py-2 bg-medical-600 hover:bg-medical-700 text-white font-bold text-xs rounded-lg transition shadow-sm">Periksa Jawaban</button>
+                    <div id="feedback-5" class="hidden mt-3 p-4 rounded-lg text-xs space-y-2"></div>
+                </div>
+
+                <!-- SOAL 6 -->
+                <div class="space-y-4 p-5 rounded-xl bg-slate-50 dark:bg-slate-700/30 border border-slate-200 dark:border-slate-700" id="box-q6">
+                    <p class="text-sm font-semibold text-slate-800 dark:text-white">
+                        <b>6.</b> Apa indikasi utama dilakukannya bedah metabolik / bariatrik pada pasien dengan obesitas?
+                    </p>
+                    <div class="space-y-2 text-sm">
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q6" value="A" class="mr-2"> A. BMI >= 35 kg/m² dengan atau tanpa komorbid, atau BMI 30-34.9 kg/m² disertai DM Tipe 2</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q6" value="B" class="mr-2"> B. Semua pasien dengan BMI di atas 25 kg/m²</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q6" value="C" class="mr-2"> C. Sebagai lini terapi pertama pada setiap orang yang ingin menurunkan berat badan secara instan</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q6" value="D" class="mr-2"> D. Hanya untuk pasien usia di bawah 18 tahun</label>
+                    </div>
+                    <button onclick="checkSingle(6, 'A')" class="px-4 py-2 bg-medical-600 hover:bg-medical-700 text-white font-bold text-xs rounded-lg transition shadow-sm">Periksa Jawaban</button>
+                    <div id="feedback-6" class="hidden mt-3 p-4 rounded-lg text-xs space-y-2"></div>
+                </div>
+
+                <!-- SOAL 7 -->
+                <div class="space-y-4 p-5 rounded-xl bg-slate-50 dark:bg-slate-700/30 border border-slate-200 dark:border-slate-700" id="box-q7">
+                    <p class="text-sm font-semibold text-slate-800 dark:text-white">
+                        <b>7.</b> Berapa persentase minimal penurunan berat badan awal yang sudah memberikan manfaat klinis bermakna (seperti penurunan risiko DM Tipe 2, perbaikan tekanan darah & lipid)?
+                    </p>
+                    <div class="space-y-2 text-sm">
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q7" value="A" class="mr-2"> A. 1 - 2%</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q7" value="B" class="mr-2"> B. 5 - 7%</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q7" value="C" class="mr-2"> C. 20 - 25%</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q7" value="D" class="mr-2"> D. 40 - 50%</label>
+                    </div>
+                    <button onclick="checkSingle(7, 'B')" class="px-4 py-2 bg-medical-600 hover:bg-medical-700 text-white font-bold text-xs rounded-lg transition shadow-sm">Periksa Jawaban</button>
+                    <div id="feedback-7" class="hidden mt-3 p-4 rounded-lg text-xs space-y-2"></div>
+                </div>
+
+                <!-- SOAL 8 -->
+                <div class="space-y-4 p-5 rounded-xl bg-slate-50 dark:bg-slate-700/30 border border-slate-200 dark:border-slate-700" id="box-q8">
+                    <p class="text-sm font-semibold text-slate-800 dark:text-white">
+                        <b>8.</b> Manakah efek samping utama dari obat antiobesitas Orlistat yang bekerja dengan menghambat enzim lipase pankreas di saluran cerna?
+                    </p>
+                    <div class="space-y-2 text-sm">
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q8" value="A" class="mr-2"> A. Insomnia berat dan palpitasi jantung</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q8" value="B" class="mr-2"> B. Flatus, urgensi fekal, dan feses berminyak (steatorea) serta risiko malabsorpsi vitamin larut lemak</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q8" value="C" class="mr-2"> C. Peningkatan risiko kejang dan ketergantungan opiat</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q8" value="D" class="mr-2"> D. Retensi cairan masif dan gagal jantung kongestif</label>
+                    </div>
+                    <button onclick="checkSingle(8, 'B')" class="px-4 py-2 bg-medical-600 hover:bg-medical-700 text-white font-bold text-xs rounded-lg transition shadow-sm">Periksa Jawaban</button>
+                    <div id="feedback-8" class="hidden mt-3 p-4 rounded-lg text-xs space-y-2"></div>
+                </div>
+
+                <!-- SOAL 9 -->
+                <div class="space-y-4 p-5 rounded-xl bg-slate-50 dark:bg-slate-700/30 border border-slate-200 dark:border-slate-700" id="box-q9">
+                    <p class="text-sm font-semibold text-slate-800 dark:text-white">
+                        <b>9.</b> Mengapa latihan fisik dengan kombinasi aerobik dan latihan ketahanan (resistance exercise) sangat dianjurkan dalam program penatalaksanaan obesitas?
+                    </p>
+                    <div class="space-y-2 text-sm">
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q9" value="A" class="mr-2"> A. Karena latihan resistance dapat mencegah hilangnya massa otot yang biasanya ikut hilang saat terjadi defisit energi</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q9" value="B" class="mr-2"> B. Karena latihan aerobik saja terbukti meningkatkan berat badan secara drastis</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q9" value="C" class="mr-2"> C. Karena aktivitas fisik adalah satu-satunya komponen yang menyumbang 90% pengeluaran energi harian</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q9" value="D" class="mr-2"> D. Karena latihan beban dapat menyembuhkan osteoartritis lutut secara instan</label>
+                    </div>
+                    <button onclick="checkSingle(9, 'A')" class="px-4 py-2 bg-medical-600 hover:bg-medical-700 text-white font-bold text-xs rounded-lg transition shadow-sm">Periksa Jawaban</button>
+                    <div id="feedback-9" class="hidden mt-3 p-4 rounded-lg text-xs space-y-2"></div>
+                </div>
+
+                <!-- SOAL 10 -->
+                <div class="space-y-4 p-5 rounded-xl bg-slate-50 dark:bg-slate-700/30 border border-slate-200 dark:border-slate-700" id="box-q10">
+                    <p class="text-sm font-semibold text-slate-800 dark:text-white">
+                        <b>10.</b> Kapan waktu evaluasi klinis yang tepat untuk menilai apakah suatu farmakoterapi antiobesitas efektif dan layak dilanjutkan jangka panjang?
+                    </p>
+                    <div class="space-y-2 text-sm">
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q10" value="A" class="mr-2"> A. Minggu ke-1 setelah minum obat</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q10" value="B" class="mr-2"> B. Minggu ke-12 pada dosis terapeutik (biasanya dinilai apakah penurunan BB mencapai >= 4-5%)</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q10" value="C" class="mr-2"> C. Setelah 5 tahun penggunaan terus menerus</label>
+                        <label class="block p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer transition"><input type="radio" name="q10" value="D" class="mr-2"> D. Hanya ketika pasien mengalami kenaikan berat badan kembali</label>
+                    </div>
+                    <button onclick="checkSingle(10, 'B')" class="px-4 py-2 bg-medical-600 hover:bg-medical-700 text-white font-bold text-xs rounded-lg transition shadow-sm">Periksa Jawaban</button>
+                    <div id="feedback-10" class="hidden mt-3 p-4 rounded-lg text-xs space-y-2"></div>
+                </div>
+
+            </section>
+
+            <!-- 5. QUICK REVIEW -->
+            <section id="quick-review" class="bg-gradient-to-br from-medical-600 to-medical-800 text-white p-6 md:p-8 rounded-2xl shadow-lg space-y-4">
+                <h3 class="text-xl font-bold flex items-center gap-2">If You Only Have 5 Minutes (Quick Review)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div class="bg-white/10 p-4 rounded-xl backdrop-blur-sm space-y-1">
+                        <span class="font-bold block text-medical-200">Esensi Penyakit</span>
+                        <p>Obesitas adalah penyakit kronik & progresif; bukan sekadar masalah kemauan (willpower).</p>
+                    </div>
+                    <div class="bg-white/10 p-4 rounded-xl backdrop-blur-sm space-y-1">
+                        <span class="font-bold block text-medical-200">Target Manfaat</span>
+                        <p>Penurunan berat badan awal 5-7% sudah menurunkan risiko metabolik secara bermakna.</p>
+                    </div>
+                    <div class="bg-white/10 p-4 rounded-xl backdrop-blur-sm space-y-1">
+                        <span class="font-bold block text-medical-200">Farmakoterapi Unggulan</span>
+                        <p>Agonis GLP-1 / Tirzepatide memberikan efikasi tertinggi dan proteksi kardiovaskular.</p>
+                    </div>
+                    <div class="bg-white/10 p-4 rounded-xl backdrop-blur-sm space-y-1">
+                        <span class="font-bold block text-medical-200">Indikasi Bariatrik</span>
+                        <p>BMI >= 35 atau BMI 30-34.9 dengan DM Tipe 2 memberikan hasil remisi jangka panjang terbaik.</p>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="max-w-7xl mx-auto px-4 py-8 text-center text-xs text-slate-500 dark:text-slate-400 border-t border-slate-200 dark:border-slate-800 mt-12">
+        Interactive Medical Study Companion • Blok Endokrin & Metabolik • FK UMS (Offline Ready)
+    </footer>
+
+    <!-- JavaScript Interactivity -->
+    <script>
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const themeToggle = document.getElementById('themeToggle');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                themeToggle.innerText = 'Mode Terang';
+            } else {
+                html.classList.add('dark');
+                themeToggle.innerText = 'Mode Gelap';
+            }
+        }
+
+        function toggleAccordion(id) {
+            const el = document.getElementById(id);
+            const icon = document.getElementById('icon-' + id);
+            if (el.style.display === 'none' || el.style.display === '') {
+                el.style.display = 'block';
+                icon.innerText = '^';
+            } else {
+                el.style.display = 'none';
+                icon.innerText = 'v';
+            }
+        }
+
+        let totalScore = 0;
+        const answeredState = {};
+
+        function checkSingle(qNum, correctOpt) {
+            const radios = document.getElementsByName('q' + qNum);
+            let userVal = '';
+            for (const r of radios) {
+                if (r.checked) userVal = r.value;
+            }
+
+            const feedback = document.getElementById('feedback-' + qNum);
+            feedback.classList.remove('hidden');
+
+            if (!userVal) {
+                feedback.className = "mt-3 p-4 rounded-lg text-xs bg-amber-50 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200";
+                feedback.innerHTML = "Silakan pilih salah satu opsi jawaban terlebih dahulu.";
+                return;
+            }
+
+            if (!answeredState[qNum]) {
+                answeredState[qNum] = true;
+                if (userVal === correctOpt) {
+                    totalScore++;
+                    feedback.className = "mt-3 p-4 rounded-lg text-xs bg-emerald-50 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200 border border-emerald-200";
+                    feedback.innerHTML = "<b>BENAR!</b><br>Jawaban Anda sudah tepat dan sesuai dengan konsep klinis.";
+                } else {
+                    feedback.className = "mt-3 p-4 rounded-lg text-xs bg-rose-50 text-rose-800 dark:bg-rose-900/40 dark:text-rose-200 border border-rose-200";
+                    feedback.innerHTML = "<b>KURANG TEPAT.</b> Jawaban yang benar adalah opsi <b>" + correctOpt + "</b>.";
+                }
+                document.getElementById('quizScore').innerText = "Skor Total: " + totalScore + " / 10";
+            }
+        }
+
+        window.addEventListener('scroll', function() {
+            const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+            document.getElementById('progressText').innerText = Math.round(scrolled) + '%';
+        });
+
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', function(e) {
+            const term = e.target.value.toLowerCase();
+            const sections = document.querySelectorAll('.searchable-content > section');
+            sections.forEach(function(sec) {
+                const text = sec.innerText.toLowerCase();
+                if (text.includes(term) || term === '') {
+                    sec.style.display = '';
+                } else {
+                    sec.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
